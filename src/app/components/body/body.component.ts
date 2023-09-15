@@ -18,8 +18,11 @@ export class BodyComponent {
   };
 
   indiceActual : number = 0;
+  respuestas : Array<string> = [];
 
-  constructor (private servicio : QuestionsService){}
+  constructor (private servicio : QuestionsService, private cd : ChangeDetectorRef){}
+
+  /**************************************************/
 
   ngOnInit (): void {
     this.obtenerDatos();
@@ -33,40 +36,49 @@ export class BodyComponent {
     })
   }
 
-  getPreguntaActual ()
+  /**************************************************/
+
+  get preguntaActual ()
   {
-    return this.dataQuestions.results[this.indiceActual];
+      return this.dataQuestions.results[this.indiceActual] ?? "";
   }
 
-  getRespuestasDesordenadas ()
+  get respuestasDesordenadas ()
   {
-    let pActual = this.getPreguntaActual();
+    let pActual = this.preguntaActual;
 
-    let respuestas = [
+    this.respuestas = [
       pActual.correct_answer,
-      ...pActual.incorrect_answers
+      ...pActual.incorrect_answers ?? []
     ];
 
-    setTimeout(() => {
+    this.revolver();
 
-      let size = respuestas.length;
-      let indiceActual = size - 1;
+    // respuestas.sort(() => Math.random() - 0.5);
 
+    return this.respuestas;
+  }
+
+  /*****************************************************/
+
+  revolver ()
+  {
+    let size = this.respuestas.length;
+    let indiceActual = size - 1;
+
+    // setTimeout(() => {
       while (indiceActual >= 0)
       {
         let indiceRandom = Math.floor(Math.random() * size);
 
         // Intercambia los elementos usando una variable temporal
-        let temp = respuestas[indiceActual];
-        respuestas[indiceActual] = respuestas[indiceRandom];
-        respuestas[indiceRandom] = temp;
+        let temp = this.respuestas[indiceActual];
+        this.respuestas[indiceActual] = this.respuestas[indiceRandom];
+        this.respuestas[indiceRandom] = temp;
 
         indiceActual--;
       }
-
-    }, 0);
-
-    return respuestas;
+    // }, 0);
   }
 
   cambiarPregunta (tipo : number) {

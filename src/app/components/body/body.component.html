@@ -1,14 +1,19 @@
-<p>body works!</p>
 
-<!-- <div id="preguntas" *ngFor="let question of dataQuestions.results"> -->
-  <p [innerHTML]="getPreguntaActual().question"></p>
+<div id="preguntas">
 
-  <ul *ngFor="let respuesta of getRespuestasDesordenadas()">
-    <li [innerHTML]="respuesta"></li>
+  <h2>Question #{{indiceActual + 1}}</h2>
+
+  <span [innerHTML]="preguntaActual.question"></span>
+
+  <ul>
+    <li *ngFor="let respuesta of respuestasDesordenadas" class="resp">
+      <input type="radio" name="pregunta_{{indiceActual}}" id="{{respuesta}}">
+      <label for="{{respuesta}}"  [innerHTML]="respuesta">
+      </label>
+    </li>
   </ul>
 
-<!-- </div> -->
-<h4>Pregunta #{{indiceActual + 1}}</h4>
+</div>
 
-<button (click)="cambiarPregunta(0)">Anterior</button>
-<button (click)="cambiarPregunta(1)">Siguiente</button>
+<!-- <button (click)="cambiarPregunta(0)">Anterior</button>
+<button (click)="cambiarPregunta(1)">Siguiente</button> -->
