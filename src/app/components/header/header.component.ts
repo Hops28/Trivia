@@ -7,5 +7,12 @@ import { Component } from '@angular/core';
 })
 
 export class HeaderComponent {
-
+  // ngOnInit() {
+  //   // Initialize particles.js
+  //   const particlesInstance = new Particles();
+  //   particlesInstance.init({
+  //     container: document.querySelector('#particles-js'),
+  //     // Other options
+  //   });
+  // }
 }

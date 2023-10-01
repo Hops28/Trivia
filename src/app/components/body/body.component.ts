@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { map } from 'rxjs';
 import { Questions, Result } from 'src/app/models/Questions.types';
 import { QuestionsService } from 'src/app/services/questions.service';
@@ -12,13 +12,23 @@ import { QuestionsService } from 'src/app/services/questions.service';
 })
 
 export class BodyComponent {
+  // Objeto que contiene todas las preguntas obtenidas de la API
   dataQuestions : Questions = {
     response_code: 0,
     results: []
   };
 
+  // Variable que va cambiando a medida que se pasa la pregunta
   indiceActual : number = 0;
+
+  // Arreglo que almacena las respuestas de la pregunta actual
   respuestas : Array<string> = [];
+
+  // Variable que contabiliza las preguntas que fueron respondidas correctamente
+  preguntasCorrectas : number = 0;
+
+  // Elemento HTML del botón siguiente
+  btnSiguiente : HTMLElement | null = document.querySelector("#btnSiguiente");
 
   constructor (private servicio : QuestionsService, private cd : ChangeDetectorRef){}
 
@@ -28,76 +38,108 @@ export class BodyComponent {
     this.obtenerDatos();
   }
 
+  // Función que actualiza y desordena las respuestas de la pregunta actual
+  respuestasDesordenadas ()
+  {
+    this.respuestas = [
+      this.preguntaActual.correct_answer,
+      ...this.preguntaActual.incorrect_answers ?? []
+    ];
+
+    this.respuestas.sort(() => Math.random() - 0.5);
+  }
+
+  // Función que obtiene los datos de la API
   obtenerDatos ()
   {
     this.servicio.getQuestions().subscribe(data => {
       this.dataQuestions = data;
       this.indiceActual = 0;
+
+      this.respuestasDesordenadas();
     })
+  }
+
+  // Función que cambia la pregunta actual a la siguiente
+  cambiarPregunta ()
+  {
+    if (this.indiceActual < 10)
+    {
+      let input_name = "pregunta_" + this.indiceActual;
+      let respuestaSeleccionada = document.querySelector<HTMLInputElement>("input[name='" + input_name + "']:checked")?.value ?? "";
+
+      // let palabras = respuestaSeleccionada.split(" ");
+
+      // Se obtiene el label que hace referencia al radioButton
+      let label = document.querySelector<HTMLLabelElement>('label[for="qst' + respuestaSeleccionada +'"]');
+
+      /*****************************************************/
+
+      if (respuestaSeleccionada == this.dataQuestions.results[this.indiceActual].correct_answer) {
+        if (label?.style)
+        {
+          label.style.backgroundColor = '#008800';
+
+          // Se contabilizan la cantidad de preguntas contestadas correctamente
+          this.preguntasCorrectas++;
+        }
+      }
+      else {
+        if (label?.style)
+        {
+          let correctlabel = document.querySelector<HTMLLabelElement>('label[for="qst' + this.dataQuestions.results[this.indiceActual].correct_answer + '"]');
+
+          // De alguna manera esto funciona, es para asegurarse de que todo funcione en caso de que sea null
+          if (correctlabel?.style)
+          {
+            correctlabel.style.backgroundColor = '#558888';
+          }
+
+          label.style.backgroundColor = '#FF0000';
+        }
+      }
+
+      setTimeout(() => {
+        if (this.indiceActual + 1 < 10)
+        {
+          this.indiceActual++;
+          this.respuestasDesordenadas();
+          // this.revolver();
+        }
+      }, 2000);
+
+      this.BotonSiguiente(0);
+
+      /*****************************************************/
+    }
+  }
+
+  // Función que activa el botón hasta que se seleccione alguna respuesta
+  BotonSiguiente(modo : number) {
+    let boton = document.getElementById("btnSiguiente") as HTMLButtonElement;
+
+    if (modo == 1)
+    {
+      if (boton?.disabled)
+      {
+        if (boton.disabled)
+        {
+          boton.disabled = false;
+        }
+      }
+    }
+    else
+    {
+      boton.disabled = true;
+    }
   }
 
   /**************************************************/
 
+  // Getter que devuelve la pregunta actual
   get preguntaActual ()
   {
       return this.dataQuestions.results[this.indiceActual] ?? "";
   }
-
-  get respuestasDesordenadas ()
-  {
-    let pActual = this.preguntaActual;
-
-    this.respuestas = [
-      pActual.correct_answer,
-      ...pActual.incorrect_answers ?? []
-    ];
-
-    this.revolver();
-
-    // respuestas.sort(() => Math.random() - 0.5);
-
-    return this.respuestas;
-  }
-
-  /*****************************************************/
-
-  revolver ()
-  {
-    let size = this.respuestas.length;
-    let indiceActual = size - 1;
-
-    // setTimeout(() => {
-      while (indiceActual >= 0)
-      {
-        let indiceRandom = Math.floor(Math.random() * size);
-
-        // Intercambia los elementos usando una variable temporal
-        let temp = this.respuestas[indiceActual];
-        this.respuestas[indiceActual] = this.respuestas[indiceRandom];
-        this.respuestas[indiceRandom] = temp;
-
-        indiceActual--;
-      }
-    // }, 0);
-  }
-
-  cambiarPregunta (tipo : number) {
-    if (tipo == 1)
-    {
-      this.indiceActual++;
-      if (this.indiceActual >= this.dataQuestions.results.length) {
-        this.indiceActual = 0;
-      }
-    }
-    else if (tipo == 0){
-      this.indiceActual--;
-      if (this.indiceActual < 0) {
-        this.indiceActual = this.dataQuestions.results.length - 1;
-      }
-    }
-
-    // this.cd.detectChanges();
-
-    console.log(this.dataQuestions);
-  }
 }
+

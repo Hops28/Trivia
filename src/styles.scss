@@ -3,3 +3,12 @@
   margin: 0;
   padding: 0;
 }
+
+#particles-js {
+  background-color: #1e0050;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  z-index: -5;
+}

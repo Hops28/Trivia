@@ -6,14 +6,17 @@
   <span [innerHTML]="preguntaActual.question"></span>
 
   <ul>
-    <li *ngFor="let respuesta of respuestasDesordenadas" class="resp">
-      <input type="radio" name="pregunta_{{indiceActual}}" id="{{respuesta}}">
-      <label for="{{respuesta}}"  [innerHTML]="respuesta">
+    <li *ngFor="let respuesta of respuestas" class="resp">
+      <input type="radio" name="pregunta_{{indiceActual}}"  id="qst{{respuesta}}" value="{{respuesta}}" (click)="BotonSiguiente(1)">
+      <label for="qst{{respuesta}}" class="resps" [innerHTML]="respuesta">
       </label>
     </li>
   </ul>
 
+  <div id="pie">
+    <h3 class="text">Answered correctly :&nbsp;&nbsp; {{preguntasCorrectas}} / 10</h3>
+    <button (click)="cambiarPregunta()" id="btnSiguiente" disabled>Next</button>
+  </div>
 </div>
 
-<!-- <button (click)="cambiarPregunta(0)">Anterior</button>
-<button (click)="cambiarPregunta(1)">Siguiente</button> -->
+<!-- <button (click)="cambiarPregunta(0)">Anterior</button> -->
