@@ -1,22 +1,30 @@
 
 <div id="preguntas">
 
-  <h2>Question #{{indiceActual + 1}}</h2>
+  <h2 class="{{claseTitulo}}">Question #{{indiceActual + 1}}</h2>
 
-  <span [innerHTML]="preguntaActual.question"></span>
+  <span [innerHTML]="preguntaActual.question" class="{{claseTitulo}}"></span>
 
-  <ul>
-    <li *ngFor="let respuesta of respuestas" class="resp">
-      <input type="radio" name="pregunta_{{indiceActual}}"  id="qst{{respuesta}}" value="{{respuesta}}" (click)="BotonSiguiente(1)">
+  <ul class="{{claseLista}}">
+    <li *ngFor="let respuesta of respuestas">
+      <input type="radio" name="pregunta_{{indiceActual}}"  id="qst{{respuesta}}" value="{{respuesta}}" (click)="BotonSiguiente(1)" class="respinput">
       <label for="qst{{respuesta}}" class="resps" [innerHTML]="respuesta">
       </label>
     </li>
   </ul>
 
-  <div id="pie">
-    <h3 class="text">Answered correctly :&nbsp;&nbsp; {{preguntasCorrectas}} / 10</h3>
-    <button (click)="cambiarPregunta()" id="btnSiguiente" disabled>Next</button>
+  <div id="pie" class="{{claseTitulo}}">
+    <div id="pieDatos">
+      <h3>{{preguntaActual.category}}</h3>
+      <h3>{{preguntaActual.difficulty}}</h3>
+    </div>
+
+    <div id="pieBoton">
+      <h3 class="text">Answered correctly :&nbsp;&nbsp; {{preguntasCorrectas}} / 10</h3>
+      <button (click)="cambiarPregunta()" id="btnSiguiente" disabled>Next</button>
+    </div>
   </div>
+
 </div>
 
 <!-- <button (click)="cambiarPregunta(0)">Anterior</button> -->

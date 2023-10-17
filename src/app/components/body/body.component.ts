@@ -27,6 +27,10 @@ export class BodyComponent {
   // Variable que contabiliza las preguntas que fueron respondidas correctamente
   preguntasCorrectas : number = 0;
 
+  // variable que va a funcionar para las animaciones
+claseTitulo :  string = "animate__animated animate__fadeIn";
+claseLista :  string = "animate__animated animate__fadeIn";
+
   // Elemento HTML del botón siguiente
   btnSiguiente : HTMLElement | null = document.querySelector("#btnSiguiente");
 
@@ -102,11 +106,38 @@ export class BodyComponent {
       setTimeout(() => {
         if (this.indiceActual + 1 < 10)
         {
-          this.indiceActual++;
-          this.respuestasDesordenadas();
-          // this.revolver();
+          this.claseLista = "animate__animated animate__fadeOutLeft animate__faster";
+          this.claseTitulo = "animate__animated animate__fadeOut animate__faster";
+
+          setTimeout(() => {
+            this.claseLista = "animate__animated animate__fadeInRight animate__faster";
+            this.claseTitulo = "animate__animated animate__fadeIn";
+
+            // Se colorean las respuestas por si acaso
+            let respuestasElement = document.getElementsByClassName("resps");
+            let respuestasElementInput = document.getElementsByClassName("respinput");
+
+            for (var i = 0; i < respuestasElement.length; i++) {
+              // Accede a cada elemento individualmente
+              var elemento = respuestasElement[i] as HTMLLabelElement;
+              var elementoInput = respuestasElementInput[i] as HTMLInputElement;
+              // Realiza operaciones en cada elemento
+
+              elementoInput.checked = false;
+              elemento.removeAttribute("style");
+            }
+
+            this.indiceActual++;
+
+            // Se desordenan
+            this.respuestasDesordenadas();
+
+            console.log(respuestasElement);
+
+            // this.revolver();
+          }, 500)
         }
-      }, 2000);
+      }, 1500);
 
       this.BotonSiguiente(0);
 

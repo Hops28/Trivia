@@ -12,6 +12,8 @@ export class QuestionsService {
 
   private url : string = "https://opentdb.com/api.php?amount=10"
 
+  // https://opentdb.com/api.php?amount=10&type=boolean
+
   constructor(private HTTP: HttpClient) { }
 
   /**
