@@ -15,12 +15,16 @@
 
   <div id="pie" class="{{claseTitulo}}">
     <div id="pieDatos">
-      <h3>{{preguntaActual.category}}</h3>
-      <h3>{{preguntaActual.difficulty}}</h3>
+      <div class="h3-container">
+        <h3>{{preguntaActual.category}}</h3>
+        <h3>{{preguntaActual.difficulty}}</h3>
+      </div>
     </div>
 
     <div id="pieBoton">
-      <h3 class="text">Answered correctly :&nbsp;&nbsp; {{preguntasCorrectas}} / 10</h3>
+      <h3 class="text">Answered correctly :&nbsp;&nbsp;
+        <p><br></p>
+        {{preguntasCorrectas}} / 10</h3>
       <button (click)="cambiarPregunta()" id="btnSiguiente" disabled>Next</button>
     </div>
   </div>
