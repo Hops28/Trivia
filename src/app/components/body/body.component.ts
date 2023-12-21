@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { map } from 'rxjs';
+import Swal from 'sweetalert2';
 import { Questions, Result } from 'src/app/models/Questions.types';
 import { QuestionsService } from 'src/app/services/questions.service';
 // import { unescapeHtml } from '@angular/common/pipes';
@@ -132,7 +133,7 @@ claseLista :  string = "animate__animated animate__fadeIn";
             // Se desordenan
             this.respuestasDesordenadas();
 
-            console.log(respuestasElement);
+            // console.log(respuestasElement);
 
             // this.revolver();
           }, 500)
@@ -141,6 +142,19 @@ claseLista :  string = "animate__animated animate__fadeIn";
 
       this.BotonSiguiente(0);
 
+      if (this.indiceActual == 9)
+      {
+        setTimeout(() => {
+          Swal.fire({
+            title: 'Your score: ' + this.preguntasCorrectas + '/10',
+            confirmButtonText: 'Repeat trivia'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.reload();
+            }
+          })
+        }, 1500)
+      }
       /*****************************************************/
     }
   }
